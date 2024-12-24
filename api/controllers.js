@@ -351,8 +351,6 @@ const Post = async (req, res) => {
   let fullUrl = originUrl + req.url;
 
   try {
-    // **Log raw query parameter**
-    console.log("Raw req.params.query:", req.params.query);
 
     // Handle query string and sanitize it
     let oriQuery = decodeURIComponent(req.params.query);
