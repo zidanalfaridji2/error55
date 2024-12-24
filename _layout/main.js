@@ -163,7 +163,6 @@ readNext += `
             .replace(/\s/g, "-")
             .toLowerCase()}/">${ucwords(dataKw[i])}</a>
         </h2>
-        <small class="text-muted">${dataTgl[i]}</small>
       </div>
     </div>
   </div>`;
