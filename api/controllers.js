@@ -335,12 +335,12 @@ const Post = async (req, res) => {
 
       return {
         keyword: keyword,
-        date: date
+        date: date,
       };
     });
 
     // Extract only the keywords into an array
-    let extractedKw = formattedDataKw.map(item => item.keyword);
+    let extractedKw = formattedDataKw.map((item) => item.keyword.toLowerCase());
 
     // Handle query string and sanitize it
     let oriQuery = decodeURIComponent(req.params.query);
@@ -348,8 +348,12 @@ const Post = async (req, res) => {
     let query = decodeURIComponent(req.params.query);
     query = await validStr(query); // Validate the query string
 
+    // **Normalize query for comparison**
+    let normalizedQuery = query.toLowerCase();
+
     // **Filter query: Redirect to 404 if query is not in keywords**
-    if (!extractedKw.includes(query)) {
+    if (!extractedKw.includes(normalizedQuery)) {
+      console.log(`Query "${normalizedQuery}" not found in keywords. Redirecting to 404.`);
       return res.redirect(`${originUrl}/404.html`);
     }
 
@@ -360,11 +364,17 @@ const Post = async (req, res) => {
     // Configure app settings
     appConfig["typePage"] = "post";
     appConfig["type"] = "article";
-    appConfig["desc"] = await removeBadWords(text[0].replace(/<b>/g, "").replace(/<\/b>/g, ""), appConfig["removeBadWords"]);
-    appConfig["image"] = img.length > 0 ? img[Math.floor(Math.random() * img.length)]["image"] : "/path/to/default-image.jpg";
+    appConfig["desc"] = await removeBadWords(
+      text[0].replace(/<b>/g, "").replace(/<\/b>/g, ""),
+      appConfig["removeBadWords"]
+    );
+    appConfig["image"] =
+      img.length > 0
+        ? img[Math.floor(Math.random() * img.length)]["image"]
+        : "/path/to/default-image.jpg";
     appConfig["dataKw"] = formattedDataKw;
     appConfig["kw"] = extractedKw;
-    appConfig["tgl"] = formattedDataKw.map(item => item.date);
+    appConfig["tgl"] = formattedDataKw.map((item) => item.date);
     appConfig["img"] = img;
     appConfig["text"] = text;
     appConfig["titlePage"] = ucwords(oriQuery);
@@ -380,6 +390,7 @@ const Post = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
+
 
 
 
