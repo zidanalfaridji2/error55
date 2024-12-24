@@ -356,28 +356,21 @@ const Post = async (req, res) => {
 
     // Handle query string and sanitize it
     let oriQuery = decodeURIComponent(req.params.query);
-    console.log("Decoded oriQuery:", oriQuery);
 
     oriQuery = oriQuery.replace(/-+/g, "-").replace(/-/g, " ");
-    console.log("Sanitized oriQuery (replaced hyphens):", oriQuery);
 
     let query = decodeURIComponent(req.params.query);
-    console.log("Decoded query:", query);
 
     query = oriQuery.toLowerCase(); // Simpan validasi minimal tanpa mengubah kata
-    console.log("Validated query:", query);
 
     // Normalize query for comparison
     let normalizedQuery = query.toLowerCase();
-    console.log("Normalized Query:", normalizedQuery);
 
     // **Get list of keywords**
     let listKw = await getFile("keywords.txt");
-    console.log("Raw keywords.txt content:", listKw);
 
     listKw = listKw.split("\n");
     let kw = listKw.map((e) => e.trim()); // Remove extra spaces
-    console.log("Trimmed keywords:", kw);
 
     // Format keywords into an array of objects with keyword and timestamp (date)
     let formattedDataKw = kw.map((e) => {
