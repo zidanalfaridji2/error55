@@ -1,0 +1,13 @@
+{
+    "functions": {
+      "api/core.js": {
+        "includeFiles": "**"
+      }
+    },
+    "routes": [
+      {
+        "src": "/(.*)", 
+        "dest": "/api/core" 
+      }
+    ]
+  }
