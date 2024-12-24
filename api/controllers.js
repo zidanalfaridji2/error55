@@ -382,7 +382,6 @@ const Post = async (req, res) => {
       };
     });
 
-    console.log("Formatted keywords:", formattedDataKw);
 
     // Get the current date
     const currentDate = new Date();
@@ -393,11 +392,9 @@ const Post = async (req, res) => {
       return itemDate <= currentDate; // Only keep entries with dates <= current date
     });
 
-    console.log("Filtered keywords:", formattedDataKw);
 
     // Extract only the keywords into an array
     let extractedKw = formattedDataKw.map((item) => item.keyword.toLowerCase());
-    console.log("Extracted keywords (lowercase):", extractedKw);
 
     // **Compare normalized query against normalized keywords**
     if (!extractedKw.includes(normalizedQuery)) {
