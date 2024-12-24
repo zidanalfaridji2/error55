@@ -266,6 +266,29 @@ const Homepage = async (req, res) => {
   res.send();
 };
 
+const Robots = async (req, res) => {
+  let file = await getFile("robots.txt");
+  res.header("Content-Type", "text/plain");
+  if (file === "err") {
+    res.write("User-Agent: *\nDisallow:");
+  } else {
+    res.write(file);
+  }
+  res.send();
+};
+
+
+const Ads = async (req, res) => {
+  let file = await getFile("ads.txt");
+  res.header("Content-Type", "text/plain");
+  if (file == "err") {
+    res.write("User-Agent: *\nDisallow:");
+    res.send();
+  } else {
+    res.write(file);
+    res.send();
+  }
+};
 
 const Rss = async (req, res) => {
   let file = await getFile("feed.xml");
