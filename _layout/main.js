@@ -135,7 +135,7 @@ else if (config.typePage == "post") {
   listKw.forEach((e) => {
     const parts = e.split('#');
     if (parts.length === 2) {
-      const keyword = parts[0].trim();
+      const keyword = parts[0].trim().toLowerCase(); // Normalisasi kata kunci
       const date = parts[1].trim();
       dataTgl[keyword] = date; // Menyimpan tanggal berdasarkan kata kunci
     }
@@ -158,9 +158,12 @@ else if (config.typePage == "post") {
   let content = "";
   let readNext = "";
   for (let i = 5; i < 11; i++) {
-    // Ambil tanggal dari dataTgl berdasarkan keyword yang sesuai
-    let keyword = dataKw[i]; // Ambil kata kunci sesuai dengan index
+    let keyword = dataKw[i].toLowerCase(); // Menurunkan kapitalisasi
     let formattedDate = dataTgl[keyword] || "Tanggal Tidak Ditemukan"; // Ambil tanggal dari dataTgl atau tampilkan fallback
+
+    // Debugging untuk melihat apakah pencocokan berhasil
+    console.log(`Mencocokkan kata kunci: ${dataKw[i]} dengan ${keyword}`);
+    console.log(`Tanggal yang ditemukan: ${formattedDate}`);
 
     // Menambahkan elemen readNext dengan tanggal yang sesuai
     readNext += `<div class="col-lg-6">
@@ -176,7 +179,7 @@ else if (config.typePage == "post") {
                 .replace(/\s/g, "-")
                 .toLowerCase()}/">${ucwords(dataKw[i])}</a>
               </h2>
-              <small class="text-muted">Post by : ${config.author}</small> <!-- Menampilkan tanggal yang sesuai -->
+              <small class="text-muted">${formattedDate}</small> <!-- Menampilkan tanggal yang sesuai -->
           </div>
       </div>
     </div>`;
