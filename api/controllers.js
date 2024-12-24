@@ -271,20 +271,6 @@ const Ads = async (req, res) => {
   }
 };
 
-
-
-const Ads = async (req, res) => {
-  let file = await getFile("ads.txt");
-  res.header("Content-Type", "text/plain");
-  if (file == "err") {
-    res.write("User-Agent: *\nDisallow:");
-    res.send();
-  } else {
-    res.write(file);
-    res.send();
-  }
-};
-
 const Rss = async (req, res) => {
   let file = await getFile("feed.xml");
   res.header("Content-Type", "application/xml");
@@ -351,15 +337,6 @@ const Post = async (req, res) => {
         keyword: keyword,
         date: date,
       };
-    });
-
-    // Get the current date
-    const currentDate = new Date();
-
-    // Filter out entries where the date is greater than the current date
-    formattedDataKw = formattedDataKw.filter((item) => {
-      const itemDate = new Date(item.date);
-      return itemDate <= currentDate;  // Only keep entries with dates less than or equal to current date
     });
 
     // Extract only the keywords into an array
