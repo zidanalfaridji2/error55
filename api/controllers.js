@@ -385,9 +385,9 @@ const Post = async (req, res) => {
     let query = decodeURIComponent(req.params.query);
     query = await validStr(query); // Validate the query string
 
-    // **Normalize query for comparison (keeping Ü intact)**
-    let normalizedQuery = decodeURIComponent(query)  // Make sure the query is decoded properly
-      .toLowerCase();  // Ensure consistency in lowercase
+    // **Normalize query for comparison (without altering Ü and ü)**
+    let normalizedQuery = decodeURIComponent(query);  // Make sure the query is decoded properly
+    normalizedQuery = normalizedQuery.toLowerCase();  // Ensure consistency in lowercase
 
     // **Normalize each keyword from keywords.txt to compare against the decoded query**
     let normalizedKw = extractedKw.map((kw) =>
