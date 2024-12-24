@@ -329,29 +329,29 @@ const Post = async (req, res) => {
 
     // Format keywords into an array of objects with keyword and timestamp (date)
     let formattedDataKw = kw.map((e) => {
-      // Split the keyword and date based on '#'
       let parts = e.split("#");
-      let keyword = parts[0].trim();  // Keyword part
-      let date = parts[1] ? parts[1].trim() : "";  // Date part (if available)
+      let keyword = parts[0].trim();
+      let date = parts[1] ? parts[1].trim() : "";
 
       return {
-        keyword: keyword,  // The actual keyword
-        date: date  // The associated date
+        keyword: keyword,
+        date: date
       };
     });
 
-    // Debugging: Check the formatted data
-    console.log("formattedDataKw:", formattedDataKw);
-
-    // Extract only the keywords into an array (for use in main.js)
-    let extractedKw = formattedDataKw.map(item => item.keyword); // Only get the keyword part
-    let extractedTgl = formattedDataKw.map(item => item.date);   // Extract dates
+    // Extract only the keywords into an array
+    let extractedKw = formattedDataKw.map(item => item.keyword);
 
     // Handle query string and sanitize it
     let oriQuery = decodeURIComponent(req.params.query);
     oriQuery = oriQuery.replace(/-+/g, "-").replace(/-/g, " ");
     let query = decodeURIComponent(req.params.query);
-    query = await validStr(query);  // Validate the query string
+    query = await validStr(query); // Validate the query string
+
+    // **Filter query: Redirect to 404 if query is not in keywords**
+    if (!extractedKw.includes(query)) {
+      return res.redirect(`${originUrl}/404.html`);
+    }
 
     // Fetch related images and text based on the query
     let img = await getImages(query);
@@ -361,14 +361,10 @@ const Post = async (req, res) => {
     appConfig["typePage"] = "post";
     appConfig["type"] = "article";
     appConfig["desc"] = await removeBadWords(text[0].replace(/<b>/g, "").replace(/<\/b>/g, ""), appConfig["removeBadWords"]);
-    
-    // Select a random image
     appConfig["image"] = img.length > 0 ? img[Math.floor(Math.random() * img.length)]["image"] : "/path/to/default-image.jpg";
-
-    // Pass the formatted data (with keyword and date) to appConfig
-    appConfig["dataKw"] = formattedDataKw;  // The full array with both keyword and date
-    appConfig["kw"] = extractedKw;  // The array with only keywords
-    appConfig["tgl"] = extractedTgl; // New: Add the extracted dates to appConfig (config.tgl)
+    appConfig["dataKw"] = formattedDataKw;
+    appConfig["kw"] = extractedKw;
+    appConfig["tgl"] = formattedDataKw.map(item => item.date);
     appConfig["img"] = img;
     appConfig["text"] = text;
     appConfig["titlePage"] = ucwords(oriQuery);
@@ -377,7 +373,7 @@ const Post = async (req, res) => {
 
     // Render the page with the updated appConfig
     res.type("html");
-    res.write(await Layout(appConfig));  // Pass the updated appConfig to the layout for rendering
+    res.write(await Layout(appConfig));
     res.send();
   } catch (e) {
     console.error("Error processing post:", e);
