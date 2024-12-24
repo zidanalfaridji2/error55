@@ -385,16 +385,13 @@ const Post = async (req, res) => {
     let query = decodeURIComponent(req.params.query);
     query = await validStr(query); // Validate the query string
 
-    // **Normalize query for comparison**
-    let normalizedQuery = decodeURIComponent(query)
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")  // Remove diacritical marks like accents
-      .toLowerCase();  // Ensure lowercase consistency
+    // **Do not normalize the query string to keep special characters like Ü**
+    let normalizedQuery = query.toLowerCase(); // No normalization needed here, keep Ü as it is.
 
-    // **Normalisasi setiap keyword dari keywords.txt agar sesuai dengan format URL ter-decode**
+    // **Normalize only the keywords from keywords.txt**
     let normalizedKw = extractedKw.map((kw) =>
-      kw.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
-    );  // Normalize and remove diacritical marks from keywords
+      kw.toLowerCase() // Keep keywords as lowercase but do not normalize them to remove diacritics
+    );
 
     // Debugging: log normalized query and normalized keywords
     console.log("Normalized Query:", normalizedQuery);
@@ -439,6 +436,7 @@ const Post = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
+
 
 
 
