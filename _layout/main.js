@@ -38,7 +38,7 @@ const Main = async (config) => {
   <article class="text-center">
     <!-- Gambar Artikel -->
     <a href="/${data[i].replace(/\s+/g, ' ').replace(/\s/g, '-')}/">
-      <img class="img-fluid mb-4" src="https://siswamaster.com/img/placeholder.svg" alt="${ucwords(data[i])}">
+      <img class="img-fluid mb-4" src="${config.baseUrl}/placeholder.svg" alt="${ucwords(data[i])}">
     </a>
     <!-- Kategori -->
     <p class="text-uppercase mb-2">Spruche</p>
@@ -169,7 +169,7 @@ else if (config.typePage == "post") {
       <div class="mb-3 d-flex align-items-center">
           <a href="/${dataKw[i]
             .replace(/\s/g, "-")
-            .toLowerCase()}/"><img id="readNext" width="80" height="80" src="https://siswamaster.com/img/placeholder.svg" onerror="this.onerror=null;this.src='https://siswamaster.com/img/placeholder.svg';" alt="${ucwords(dataKw[i])}" /></a>
+            .toLowerCase()}/"><img id="readNext" width="80" height="80" src="${config.baseUrl}/placeholder.svg" onerror="this.onerror=null;this.src='${config.baseUrl}/placeholder.svg';" alt="${ucwords(dataKw[i])}" /></a>
           <div class="pl-3">
               <h2 class="mb-2 h6 font-weight-bold">
               <a class="text-dark" href="/${dataKw[i]
@@ -216,7 +216,7 @@ content += `<p><span class="navi text-left"><a class="badge badge-warning" href=
   .toLowerCase()}/">${ucwords(config.kw[3])}</a></span></p>`;
 
       }
-      content += `<p><img id="img" width="100%" src="https://siswamaster.com/img/placeholder.svg" data-src="${img[i]["image"]}" alt="${img[i]["title"]}" title="${img[i]["title"]}" onerror="this.onerror=null;this.src='${img[i]["thumbnail"]}';" class="center" loading="lazy" />${text[i]}</p>`;
+      content += `<p><img id="img" width="100%" src="${config.baseUrl}/placeholder.svg" data-src="${img[i]["image"]}" alt="${img[i]["title"]}" title="${img[i]["title"]}" onerror="this.onerror=null;this.src='${img[i]["thumbnail"]}';" class="center" loading="lazy" />${text[i]}</p>`;
     }
 
     
