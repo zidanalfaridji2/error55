@@ -119,12 +119,28 @@ const Main = async (config) => {
 </main>
 
 `;
-  } else if (config.typePage == "post") {
+  } 
+  else if (config.typePage == "post") {
   let adsTop = await getFile("ads/ads_top.txt");
   let adsCenter = await getFile("ads/ads_center.txt");
   let adsBot = await getFile("ads/ads_bottom.txt");
   let dataKw = Shuffle(config.kw);
-  let dataTgl = config.tgl; // Tambahkan variabel untuk tanggal
+  let dataTgl = {}; // Objek untuk menyimpan tanggal sesuai dengan kata kunci
+
+  // Membaca file keywords.txt
+  let listKw = await getFile("keywords.txt");
+  listKw = listKw.split("\n");
+
+  // Proses untuk memasukkan tanggal berdasarkan kata kunci
+  listKw.forEach((e) => {
+    const parts = e.split('#');
+    if (parts.length === 2) {
+      const keyword = parts[0].trim();
+      const date = parts[1].trim();
+      dataTgl[keyword] = date; // Menyimpan tanggal berdasarkan kata kunci
+    }
+  });
+
   let time = Cache.get("time::" + config.titlePage.toLowerCase());
   if (time == undefined) {
     time = new Date().getTime();
@@ -141,31 +157,27 @@ const Main = async (config) => {
 
   let content = "";
   let readNext = "";
-  
   for (let i = 5; i < 11; i++) {
-    // Pastikan dataTgl[i] adalah tanggal yang valid
-    let formattedDate = dataTgl[i] ? new Date(dataTgl[i]).toLocaleString() : new Date().toLocaleString();
-    
-readNext += `
-  <div class="col-lg-6">
-    <div class="mb-3 d-flex align-items-center">
-      <a href="/${dataKw[i]
-        .replace(/\s/g, "-")
-        .toLowerCase()}/">
-        <img id="readNext" width="80" height="80" 
-             src="https://siswamaster.com/img/placeholder.svg" 
-             onerror="this.onerror=null;this.src='https://siswamaster.com/img/placeholder.svg';" 
-             alt="${ucwords(dataKw[i])}" />
-      </a>
-      <div class="pl-3">
-        <h2 class="mb-2 h6 font-weight-bold">
-          <a class="text-dark" href="/${dataKw[i]
+    // Ambil tanggal dari dataTgl berdasarkan keyword
+    let formattedDate = dataTgl[dataKw[i]] || new Date().toLocaleString(); // Ambil tanggal sesuai dengan kata kunci
+
+    readNext += `<div class="col-lg-6">
+      <div class="mb-3 d-flex align-items-center">
+          <a href="/${dataKw[i]
             .replace(/\s/g, "-")
-            .toLowerCase()}/">${ucwords(dataKw[i])}</a>
-        </h2>
+            .toLowerCase()}/"><img id="readNext" width="80" height="80" src="https://siswamaster.com/img/placeholder.svg" onerror="this.onerror=null;this.src='https://siswamaster.com/img/placeholder.svg';" alt="${ucwords(
+        dataKw[i]
+      )}" /></a>
+          <div class="pl-3">
+              <h2 class="mb-2 h6 font-weight-bold">
+              <a class="text-dark" href="/${dataKw[i]
+                .replace(/\s/g, "-")
+                .toLowerCase()}/">${ucwords(dataKw[i])}</a>
+              </h2>
+              <small class="text-muted">${formattedDate}</small>
+          </div>
       </div>
-    </div>
-  </div>`;
+    </div>`;
     }
 
     let limiter = "";
