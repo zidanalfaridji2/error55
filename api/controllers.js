@@ -127,6 +127,10 @@ const Pagination = async (req, res) => {
   let originUrl = `${proto}://${req.headers.host}`;
   let fullUrl = `${originUrl}${req.url}`;
 
+  // Mendapatkan tanggal sekarang dari parameter atau fallback ke tanggal saat ini
+  const currentDateParam = req.query.date ? new Date(req.query.date) : new Date();  // Misalnya: ?date=2024-12-24
+  const currentDate = currentDateParam.toISOString().split("T")[0];  // Menggunakan format YYYY-MM-DD
+
   // Mengambil data kata kunci dari file
   let listKw = await getFile("keywords.txt");
   listKw = listKw.split("\n");
@@ -134,7 +138,6 @@ const Pagination = async (req, res) => {
   // Menyimpan kata kunci dan tanggal ke dalam objek terpisah
   let kw = [];
   let kwDates = {};  // Objek untuk menyimpan kata kunci dan tanggalnya
-  const currentDate = new Date();  // Mendapatkan tanggal saat ini
 
   listKw.forEach((e) => {
     let parts = e.split('#');
@@ -144,9 +147,10 @@ const Pagination = async (req, res) => {
       
       // Mengonversi tanggal menjadi objek Date
       let keywordDate = new Date(date);
-      
-      // Hanya menambahkan kata kunci yang tanggalnya lebih besar atau sama dengan currentDate
-      if (keywordDate >= currentDate) {
+      let keywordDateString = keywordDate.toISOString().split("T")[0]; // Format YYYY-MM-DD
+
+      // Menampilkan kata kunci hanya jika tanggalnya lebih kecil atau sama dengan currentDate
+      if (keywordDateString <= currentDate) {
         kw.push(keyword);  // Menambahkan kata kunci ke dalam array
         kwDates[keyword] = date;  // Menyimpan tanggal berdasarkan kata kunci
       }
@@ -208,11 +212,14 @@ const Pagination = async (req, res) => {
 };
 
 
-
 const Homepage = async (req, res) => {
   let proto = req.headers["x-forwarded-proto"] || "http";
   let originUrl = `${proto}://${req.headers.host}`;
   let fullUrl = `${originUrl}${req.url}`;
+
+  // Mendapatkan tanggal sekarang dari parameter atau fallback ke tanggal saat ini
+  const currentDateParam = req.query.date ? new Date(req.query.date) : new Date();  // Misalnya: ?date=2024-12-24
+  const currentDate = currentDateParam.toISOString().split("T")[0];  // Menggunakan format YYYY-MM-DD
 
   // Mengambil data dari keywords.txt
   let listKw = await getFile("keywords.txt");
@@ -221,13 +228,22 @@ const Homepage = async (req, res) => {
   // Menyimpan kata kunci dan tanggal
   let kw = [];
   let kwDates = {};  // Objek untuk menyimpan kata kunci dan tanggalnya
+
   listKw.forEach((e) => {
     let parts = e.split('#');
     if (parts.length === 2) {
       let keyword = parts[0].trim();
       let date = parts[1].trim();
-      kw.push(keyword);  // Menambahkan kata kunci ke dalam array
-      kwDates[keyword] = date;  // Menyimpan tanggal berdasarkan kata kunci
+      
+      // Mengonversi tanggal menjadi objek Date
+      let keywordDate = new Date(date);
+      let keywordDateString = keywordDate.toISOString().split("T")[0]; // Format YYYY-MM-DD
+
+      // Menampilkan kata kunci hanya jika tanggalnya lebih kecil atau sama dengan currentDate
+      if (keywordDateString <= currentDate) {
+        kw.push(keyword);  // Menambahkan kata kunci ke dalam array
+        kwDates[keyword] = date;  // Menyimpan tanggal berdasarkan kata kunci
+      }
     }
   });
 
