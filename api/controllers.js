@@ -350,6 +350,15 @@ const Post = async (req, res) => {
       };
     });
 
+    // Get the current date
+    const currentDate = new Date();
+
+    // Filter out entries where the date is greater than the current date
+    formattedDataKw = formattedDataKw.filter((item) => {
+      const itemDate = new Date(item.date);
+      return itemDate <= currentDate;  // Only keep entries with dates less than or equal to current date
+    });
+
     // Extract only the keywords into an array
     let extractedKw = formattedDataKw.map((item) => item.keyword.toLowerCase());
 
