@@ -315,9 +315,6 @@ const PostApi = async (req, res) => {
   } catch (e) {}
 };
 
-
-
-
 const Post = async (req, res) => {
   let proto = req.headers["x-forwarded-proto"];
   proto = proto ? proto : "http";
@@ -360,17 +357,6 @@ const Post = async (req, res) => {
       return res.redirect(`${originUrl}/404.html`);
     }
 
-    // **Date Filtering Logic**: Ensure we handle date correctly
-    let currentDate = moment();  // Current date for comparison
-    formattedDataKw = formattedDataKw.filter(item => {
-      let keywordDate = moment(item.date, "MM/DD/YYYY hh:mm:ss A", true);  // Format with AM/PM
-      if (!keywordDate.isValid()) {
-        console.error(`Invalid date in entry: ${item.keyword}`);
-        return false;  // Skip invalid dates
-      }
-      return keywordDate.isBefore(currentDate) || keywordDate.isSame(currentDate, 'day');
-    });
-
     // Fetch related images and text based on the query
     let img = await getImages(query);
     let text = await getSentences(query);
@@ -404,6 +390,7 @@ const Post = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
+
 
 
 
