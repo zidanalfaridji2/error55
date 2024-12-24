@@ -385,15 +385,16 @@ const Post = async (req, res) => {
     let query = decodeURIComponent(req.params.query);
     query = await validStr(query); // Validate the query string
 
-    // **Do not normalize the query string to keep special characters like Ü**
-    let normalizedQuery = query.toLowerCase(); // No normalization needed here, keep Ü as it is.
+    // **Normalize query for comparison (keeping Ü intact)**
+    let normalizedQuery = decodeURIComponent(query)
+      .toLowerCase();  // Do not alter Ü to 'u' or 'ue'
 
-    // **Normalize only the keywords from keywords.txt**
+    // **Normalize each keyword from keywords.txt to compare against the decoded query**
     let normalizedKw = extractedKw.map((kw) =>
-      kw.toLowerCase() // Keep keywords as lowercase but do not normalize them to remove diacritics
-    );
+      kw.toLowerCase() // Keep keywords lowercase and do not normalize Ü to 'u'
+    ); 
 
-    // Debugging: log normalized query and normalized keywords
+    // Debugging: log normalized query and normalized keywords for checking
     console.log("Normalized Query:", normalizedQuery);
     console.log("Normalized Keywords:", normalizedKw);
 
