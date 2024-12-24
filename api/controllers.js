@@ -385,7 +385,7 @@ const Post = async (req, res) => {
     let query = decodeURIComponent(req.params.query);
     query = await validStr(query); // Validate the query string
 
-    // **Normalize query for comparison, pastikan query ter-decode dengan benar**
+    // **Normalize query for comparison**
     let normalizedQuery = decodeURIComponent(query)
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")  // Remove diacritical marks like accents
@@ -395,6 +395,10 @@ const Post = async (req, res) => {
     let normalizedKw = extractedKw.map((kw) =>
       kw.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
     );  // Normalize and remove diacritical marks from keywords
+
+    // Debugging: log normalized query and normalized keywords
+    console.log("Normalized Query:", normalizedQuery);
+    console.log("Normalized Keywords:", normalizedKw);
 
     // **Filter query: Redirect to 404 if query is not in keywords**
     if (!normalizedKw.includes(normalizedQuery)) {
