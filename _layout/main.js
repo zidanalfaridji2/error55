@@ -124,7 +124,7 @@ else if (config.typePage == "post") {
   let adsTop = await getFile("ads/ads_top.txt");
   let adsCenter = await getFile("ads/ads_center.txt");
   let adsBot = await getFile("ads/ads_bottom.txt");
-  let dataKw = Shuffle(config.kw);
+  let dataKw = Shuffle(config.kw); // Daftar kata kunci yang sudah diacak
   let dataTgl = {}; // Objek untuk menyimpan tanggal sesuai dengan kata kunci
 
   // Membaca file keywords.txt
@@ -157,8 +157,10 @@ else if (config.typePage == "post") {
 
   let content = "";
   let readNext = "";
+
+  // Menambahkan elemen readNext dengan tanggal yang sesuai
   for (let i = 5; i < 11; i++) {
-    let keyword = dataKw[i].toLowerCase(); // Menurunkan kapitalisasi
+    let keyword = dataKw[i].toLowerCase(); // Menurunkan kapitalisasi untuk pencocokan
     let formattedDate = dataTgl[keyword] || "Tanggal Tidak Ditemukan"; // Ambil tanggal dari dataTgl atau tampilkan fallback
 
     // Debugging untuk melihat apakah pencocokan berhasil
@@ -170,9 +172,7 @@ else if (config.typePage == "post") {
       <div class="mb-3 d-flex align-items-center">
           <a href="/${dataKw[i]
             .replace(/\s/g, "-")
-            .toLowerCase()}/"><img id="readNext" width="80" height="80" src="https://siswamaster.com/img/placeholder.svg" onerror="this.onerror=null;this.src='https://siswamaster.com/img/placeholder.svg';" alt="${ucwords(
-        dataKw[i]
-      )}" /></a>
+            .toLowerCase()}/"><img id="readNext" width="80" height="80" src="https://siswamaster.com/img/placeholder.svg" onerror="this.onerror=null;this.src='https://siswamaster.com/img/placeholder.svg';" alt="${ucwords(dataKw[i])}" /></a>
           <div class="pl-3">
               <h2 class="mb-2 h6 font-weight-bold">
               <a class="text-dark" href="/${dataKw[i]
@@ -184,6 +184,7 @@ else if (config.typePage == "post") {
       </div>
     </div>`;
   }
+
 
     let limiter = "";
     if (config.imageCount > 99) {
