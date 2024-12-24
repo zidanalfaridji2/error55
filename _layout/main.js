@@ -120,7 +120,7 @@ const Main = async (config) => {
 
 `;
   } 
-  else if (config.typePage == "post") {
+else if (config.typePage == "post") {
   let adsTop = await getFile("ads/ads_top.txt");
   let adsCenter = await getFile("ads/ads_center.txt");
   let adsBot = await getFile("ads/ads_bottom.txt");
@@ -161,6 +161,7 @@ const Main = async (config) => {
     // Ambil tanggal dari dataTgl berdasarkan keyword
     let formattedDate = dataTgl[dataKw[i]] || new Date().toLocaleString(); // Ambil tanggal sesuai dengan kata kunci
 
+    // Menambahkan elemen readNext dengan tanggal yang sesuai
     readNext += `<div class="col-lg-6">
       <div class="mb-3 d-flex align-items-center">
           <a href="/${dataKw[i]
@@ -174,11 +175,11 @@ const Main = async (config) => {
                 .replace(/\s/g, "-")
                 .toLowerCase()}/">${ucwords(dataKw[i])}</a>
               </h2>
-              <small class="text-muted">${formattedDate}</small>
+              <small class="text-muted">${formattedDate}</small> <!-- Menampilkan tanggal yang sesuai -->
           </div>
       </div>
     </div>`;
-    }
+  }
 
     let limiter = "";
     if (config.imageCount > 99) {
