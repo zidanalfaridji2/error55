@@ -158,8 +158,9 @@ else if (config.typePage == "post") {
   let content = "";
   let readNext = "";
   for (let i = 5; i < 11; i++) {
-    // Ambil tanggal dari dataTgl berdasarkan keyword
-    let formattedDate = dataTgl[dataKw[i]] || new Date().toLocaleString(); // Ambil tanggal sesuai dengan kata kunci
+    // Ambil tanggal dari dataTgl berdasarkan keyword yang sesuai
+    let keyword = dataKw[i]; // Ambil kata kunci sesuai dengan index
+    let formattedDate = dataTgl[keyword] || "Tanggal Tidak Ditemukan"; // Ambil tanggal dari dataTgl atau tampilkan fallback
 
     // Menambahkan elemen readNext dengan tanggal yang sesuai
     readNext += `<div class="col-lg-6">
