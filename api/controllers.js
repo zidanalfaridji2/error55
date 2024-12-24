@@ -351,10 +351,33 @@ const Post = async (req, res) => {
   let fullUrl = originUrl + req.url;
 
   try {
-    // Get list of keywords
+    // **Log raw query parameter**
+    console.log("Raw req.params.query:", req.params.query);
+
+    // Handle query string and sanitize it
+    let oriQuery = decodeURIComponent(req.params.query);
+    console.log("Decoded oriQuery:", oriQuery);
+
+    oriQuery = oriQuery.replace(/-+/g, "-").replace(/-/g, " ");
+    console.log("Sanitized oriQuery (replaced hyphens):", oriQuery);
+
+    let query = decodeURIComponent(req.params.query);
+    console.log("Decoded query:", query);
+
+    query = await validStr(query); // Validate the query string
+    console.log("Validated query:", query);
+
+    // Normalize query for comparison
+    let normalizedQuery = query.toLowerCase();
+    console.log("Normalized Query:", normalizedQuery);
+
+    // **Get list of keywords**
     let listKw = await getFile("keywords.txt");
+    console.log("Raw keywords.txt content:", listKw);
+
     listKw = listKw.split("\n");
     let kw = listKw.map((e) => e.trim()); // Remove extra spaces
+    console.log("Trimmed keywords:", kw);
 
     // Format keywords into an array of objects with keyword and timestamp (date)
     let formattedDataKw = kw.map((e) => {
@@ -368,39 +391,25 @@ const Post = async (req, res) => {
       };
     });
 
+    console.log("Formatted keywords:", formattedDataKw);
+
     // Get the current date
     const currentDate = new Date();
 
     // Filter out entries where the date is greater than the current date
     formattedDataKw = formattedDataKw.filter((item) => {
       const itemDate = new Date(item.date);
-      return itemDate <= currentDate;  // Only keep entries with dates less than or equal to current date
+      return itemDate <= currentDate; // Only keep entries with dates <= current date
     });
+
+    console.log("Filtered keywords:", formattedDataKw);
 
     // Extract only the keywords into an array
     let extractedKw = formattedDataKw.map((item) => item.keyword.toLowerCase());
+    console.log("Extracted keywords (lowercase):", extractedKw);
 
-    // Handle query string and sanitize it
-    let oriQuery = decodeURIComponent(req.params.query);
-    oriQuery = oriQuery.replace(/-+/g, "-").replace(/-/g, " ");
-    let query = decodeURIComponent(req.params.query);
-    query = await validStr(query); // Validate the query string
-
-    // **Normalize query for comparison (without altering Ü and ü)**
-    let normalizedQuery = query;  // Keep the query as it is, ensure it's decoded properly
-    normalizedQuery = normalizedQuery.toLowerCase();  // Ensure consistency in lowercase
-
-    // **Normalize each keyword from keywords.txt to compare against the decoded query**
-    let normalizedKw = extractedKw.map((kw) =>
-      kw.toLowerCase()  // Keep keywords lowercase and do not normalize Ü to 'u'
-    );
-
-    // Debugging: log normalized query and normalized keywords for checking
-    console.log("Normalized Query:", normalizedQuery);
-    console.log("Normalized Keywords:", normalizedKw);
-
-    // **Filter query: Redirect to 404 if query is not in keywords**
-    if (!normalizedKw.includes(normalizedQuery)) {
+    // **Compare normalized query against normalized keywords**
+    if (!extractedKw.includes(normalizedQuery)) {
       console.log(`Query "${normalizedQuery}" not found in keywords. Redirecting to 404.`);
       return res.redirect(`${originUrl}/404.html`);
     }
