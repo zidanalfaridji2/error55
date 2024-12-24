@@ -163,9 +163,6 @@ else if (config.typePage == "post") {
     let keyword = dataKw[i].toLowerCase(); // Menurunkan kapitalisasi untuk pencocokan
     let formattedDate = dataTgl[keyword] || "Tanggal Tidak Ditemukan"; // Ambil tanggal dari dataTgl atau tampilkan fallback
 
-    // Debugging untuk melihat apakah pencocokan berhasil
-    console.log(`Mencocokkan kata kunci: ${dataKw[i]} dengan ${keyword}`);
-    console.log(`Tanggal yang ditemukan: ${formattedDate}`);
 
     // Menambahkan elemen readNext dengan tanggal yang sesuai
     readNext += `<div class="col-lg-6">
