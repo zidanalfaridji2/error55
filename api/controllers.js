@@ -386,7 +386,7 @@ const Post = async (req, res) => {
     query = await validStr(query); // Validate the query string
 
 // **Normalize query for comparison, pastikan query ter-decode dengan benar**
-let normalizedQuery = decodeURIComponent(query).toLowerCase();  // Menambahkan decodeURIComponent
+let normalizedQuery = decodeURIComponent(query).normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
 // **Normalisasi setiap keyword dari keywords.txt agar sesuai dengan format URL ter-decode**
 let normalizedKw = extractedKw.map((kw) => kw.toLowerCase());  // Normalisasi keyword yang ada di extractedKw
