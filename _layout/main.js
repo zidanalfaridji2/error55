@@ -176,7 +176,7 @@ else if (config.typePage == "post") {
                 .replace(/\s/g, "-")
                 .toLowerCase()}/">${ucwords(dataKw[i])}</a>
               </h2>
-              <small class="text-muted">${formattedDate}</small> <!-- Menampilkan tanggal yang sesuai -->
+              <small class="text-muted">Post by : ${config.author}</small> <!-- Menampilkan tanggal yang sesuai -->
           </div>
       </div>
     </div>`;
