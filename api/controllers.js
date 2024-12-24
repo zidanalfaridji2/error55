@@ -211,13 +211,23 @@ const Homepage = async (req, res) => {
   // Menyimpan kata kunci dan tanggal
   let kw = [];
   let kwDates = {};  // Objek untuk menyimpan kata kunci dan tanggalnya
+  let today = new Date();  // Tanggal saat ini
+
   listKw.forEach((e) => {
     let parts = e.split('#');
     if (parts.length === 2) {
       let keyword = parts[0].trim();
-      let date = parts[1].trim();
-      kw.push(keyword);  // Menambahkan kata kunci ke dalam array
-      kwDates[keyword] = date;  // Menyimpan tanggal berdasarkan kata kunci
+      let dateStr = parts[1].trim();
+
+      // Cek apakah tanggal valid dan lebih kecil atau sama dengan tanggal sekarang
+      let dateParts = dateStr.split(' ');
+      let date = new Date(`${dateParts[0]} ${dateParts[1]} ${dateParts[2]} ${dateParts[3]}`);
+      
+      // Jika tanggal valid dan lebih kecil atau sama dengan tanggal sekarang, masukkan ke dalam array
+      if (date <= today) {
+        kw.push(keyword);  // Menambahkan kata kunci ke dalam array
+        kwDates[keyword] = dateStr;  // Menyimpan tanggal berdasarkan kata kunci
+      }
     }
   });
 
@@ -246,17 +256,6 @@ const Homepage = async (req, res) => {
   res.send();
 };
 
-
-const Robots = async (req, res) => {
-  let file = await getFile("robots.txt");
-  res.header("Content-Type", "text/plain");
-  if (file === "err") {
-    res.write("User-Agent: *\nDisallow:");
-  } else {
-    res.write(file);
-  }
-  res.send();
-};
 
 
 const Ads = async (req, res) => {
