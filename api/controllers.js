@@ -343,6 +343,7 @@ const PostApi = async (req, res) => {
   } catch (e) {}
 };
 
+
 const Post = async (req, res) => {
   let proto = req.headers["x-forwarded-proto"];
   proto = proto ? proto : "http";
@@ -386,13 +387,13 @@ const Post = async (req, res) => {
     query = await validStr(query); // Validate the query string
 
     // **Normalize query for comparison (without altering Ü and ü)**
-    let normalizedQuery = decodeURIComponent(query);  // Make sure the query is decoded properly
+    let normalizedQuery = query;  // Keep the query as it is, ensure it's decoded properly
     normalizedQuery = normalizedQuery.toLowerCase();  // Ensure consistency in lowercase
 
     // **Normalize each keyword from keywords.txt to compare against the decoded query**
     let normalizedKw = extractedKw.map((kw) =>
       kw.toLowerCase()  // Keep keywords lowercase and do not normalize Ü to 'u'
-    ); 
+    );
 
     // Debugging: log normalized query and normalized keywords for checking
     console.log("Normalized Query:", normalizedQuery);
