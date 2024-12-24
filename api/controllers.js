@@ -386,12 +386,12 @@ const Post = async (req, res) => {
     query = await validStr(query); // Validate the query string
 
     // **Normalize query for comparison (keeping Ü intact)**
-    let normalizedQuery = decodeURIComponent(query)
-      .toLowerCase();  // Do not alter Ü to 'u' or 'ue'
+    let normalizedQuery = decodeURIComponent(query)  // Make sure the query is decoded properly
+      .toLowerCase();  // Ensure consistency in lowercase
 
     // **Normalize each keyword from keywords.txt to compare against the decoded query**
     let normalizedKw = extractedKw.map((kw) =>
-      kw.toLowerCase() // Keep keywords lowercase and do not normalize Ü to 'u'
+      kw.toLowerCase()  // Keep keywords lowercase and do not normalize Ü to 'u'
     ); 
 
     // Debugging: log normalized query and normalized keywords for checking
@@ -437,6 +437,7 @@ const Post = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
+
 
 
 
