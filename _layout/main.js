@@ -221,8 +221,7 @@ content += `<p><span class="navi text-left"><a class="badge badge-warning" href=
       }
       content += `<p><img id="img" width="100%" src="https://siswamaster.com/img/placeholder.svg" data-src="${img[i]["image"]}" alt="${img[i]["title"]}" title="${img[i]["title"]}" onerror="this.onerror=null;this.src='${img[i]["thumbnail"]}';" class="center" loading="lazy" />${text[i]}</p>`;
     }
-console.log("config.kw:", config.kw);
-console.log("config.dataKw:", config.dataKw);
+
     
 // Ambil tanggal berdasarkan titlePage
 let pageTitle = config.titlePage.toLowerCase(); // Pastikan konsistensi case
