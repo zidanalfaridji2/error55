@@ -364,7 +364,7 @@ const Post = async (req, res) => {
     let query = decodeURIComponent(req.params.query);
     console.log("Decoded query:", query);
 
-    query = await validStr(query); // Validate the query string
+    query = oriQuery.toLowerCase(); // Simpan validasi minimal tanpa mengubah kata
     console.log("Validated query:", query);
 
     // Normalize query for comparison
