@@ -68,13 +68,8 @@ const Feed = async (req, res) => {
 
 
 const SitemapXML = async (req, res) => {
-  let proto = req.headers["x-forwarded-proto"];
-  if (proto) {
-    proto = proto;
-  } else {
-    proto = "http";
-  }
-  let originUrl = proto + "://" + req.headers.host;
+  let proto = req.headers["x-forwarded-proto"] || "http";
+  let originUrl = `${proto}://${req.headers.host}`;
 
   // Membaca file keywords.txt
   let listKw = await getFile("keywords.txt");
@@ -84,13 +79,20 @@ const SitemapXML = async (req, res) => {
   let kw = [];
   let dates = {};  // Objek untuk menyimpan kata kunci dan tanggalnya
 
+  const currentDate = new Date();  // Mendapatkan tanggal saat ini
+
   listKw.forEach((e) => {
     const parts = e.split('#');
     if (parts.length === 2) {
       const keyword = parts[0].trim();
       const date = parts[1].trim();
-      kw.push(keyword);  // Menambahkan kata kunci ke dalam array
-      dates[keyword] = date;  // Menyimpan tanggal berdasarkan kata kunci
+      const keywordDate = new Date(date);
+
+      // Memfilter berdasarkan tanggal, hanya menampilkan kata kunci yang relevan
+      if (keywordDate <= currentDate) {
+        kw.push(keyword);  // Menambahkan kata kunci ke dalam array
+        dates[keyword] = date;  // Menyimpan tanggal berdasarkan kata kunci
+      }
     }
   });
 
