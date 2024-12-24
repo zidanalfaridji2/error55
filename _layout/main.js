@@ -120,46 +120,53 @@ const Main = async (config) => {
 
 `;
   } else if (config.typePage == "post") {
-    let adsTop = await getFile("ads/ads_top.txt");
-    let adsCenter = await getFile("ads/ads_center.txt");
-    let adsBot = await getFile("ads/ads_bottom.txt");
-    let dataKw = Shuffle(config.kw);
-    let dataTgl = config.tgl; // Tambahkan variabel untuk tanggal
-    let time = Cache.get("time::" + config.titlePage.toLowerCase());
-    if (time == undefined) {
-      time = new Date().getTime();
+  let adsTop = await getFile("ads/ads_top.txt");
+  let adsCenter = await getFile("ads/ads_center.txt");
+  let adsBot = await getFile("ads/ads_bottom.txt");
+  let dataKw = Shuffle(config.kw);
+  let dataTgl = config.tgl; // Tambahkan variabel untuk tanggal
+  let time = Cache.get("time::" + config.titlePage.toLowerCase());
+  if (time == undefined) {
+    time = new Date().getTime();
+  }
+
+  let tp = config.titlePage.toLowerCase();
+  tp = tp.split(" ");
+  let keyword = [];
+  tp.forEach((e) => {
+    if (e != "") {
+      keyword.push(`"${e}"`);
     }
+  });
 
-    let tp = config.titlePage.toLowerCase();
-    tp = tp.split(" ");
-    let keyword = [];
-    tp.forEach((e) => {
-      if (e != "") {
-        keyword.push(`"${e}"`);
-      }
-    });
-
-    let content = "";
-    let readNext = "";
-    for (let i = 5; i < 11; i++) {
-      let formattedDate = dataTgl[i] || new Date().toLocaleString(); // Ambil tanggal dari dataTgl
-      readNext += `<div class="col-lg-6">
-      <div class="mb-3 d-flex align-items-center">
+  let content = "";
+  let readNext = "";
+  
+  for (let i = 5; i < 11; i++) {
+    // Pastikan dataTgl[i] adalah tanggal yang valid
+    let formattedDate = dataTgl[i] ? new Date(dataTgl[i]).toLocaleString() : new Date().toLocaleString();
+    
+    readNext += `
+      <div class="col-lg-6">
+        <div class="mb-3 d-flex align-items-center">
           <a href="/${dataKw[i]
             .replace(/\s/g, "-")
-            .toLowerCase()}/"><img id="readNext" width="80" height="80" src="https://siswamaster.com/img/placeholder.svg" onerror="this.onerror=null;this.src='https://siswamaster.com/img/placeholder.svg';" alt="${ucwords(
-        dataKw[i]
-      )}" /></a>
+            .toLowerCase()}/">
+            <img id="readNext" width="80" height="80" 
+                 src="https://siswamaster.com/img/placeholder.svg" 
+                 onerror="this.onerror=null;this.src='https://siswamaster.com/img/placeholder.svg';" 
+                 alt="${ucwords(dataKw[i])}" />
+          </a>
           <div class="pl-3">
-              <h2 class="mb-2 h6 font-weight-bold">
+            <h2 class="mb-2 h6 font-weight-bold">
               <a class="text-dark" href="/${dataKw[i]
                 .replace(/\s/g, "-")
                 .toLowerCase()}/">${ucwords(dataKw[i])}</a>
-              </h2>
-              <small class="text-muted">${formattedDate}</small>
+            </h2>
+            <small class="text-muted">${formattedDate}</small>
           </div>
-      </div>
-</div>`;
+        </div>
+      </div>`;
     }
 
     let limiter = "";
