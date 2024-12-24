@@ -385,14 +385,17 @@ const Post = async (req, res) => {
     let query = decodeURIComponent(req.params.query);
     query = await validStr(query); // Validate the query string
 
-    // **Normalize query for comparison**
-    let normalizedQuery = query.toLowerCase();
+// **Normalize query for comparison, pastikan query ter-decode dengan benar**
+let normalizedQuery = decodeURIComponent(query).toLowerCase();  // Menambahkan decodeURIComponent
 
-    // **Filter query: Redirect to 404 if query is not in keywords**
-    if (!extractedKw.includes(normalizedQuery)) {
-      console.log(`Query "${normalizedQuery}" not found in keywords. Redirecting to 404.`);
-      return res.redirect(`${originUrl}/404.html`);
-    }
+// **Normalisasi setiap keyword dari keywords.txt agar sesuai dengan format URL ter-decode**
+let normalizedKw = extractedKw.map((kw) => kw.toLowerCase());  // Normalisasi keyword yang ada di extractedKw
+
+// **Filter query: Redirect to 404 if query is not in keywords**
+if (!normalizedKw.includes(normalizedQuery)) {
+  console.log(`Query "${normalizedQuery}" not found in keywords. Redirecting to 404.`);
+  return res.redirect(`${originUrl}/404.html`);
+}
 
     // Fetch related images and text based on the query
     let img = await getImages(query);
