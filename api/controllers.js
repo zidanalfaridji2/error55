@@ -327,10 +327,6 @@ const Post = async (req, res) => {
   try {
     // Get list of keywords
     let listKw = await getFile("keywords.txt");
-    if (!listKw) {
-      throw new Error("Failed to read keywords.txt");
-    }
-
     listKw = listKw.split("\n");
     let kw = listKw.map((e) => e.trim()); // Remove extra spaces
 
@@ -344,14 +340,6 @@ const Post = async (req, res) => {
         keyword: keyword,
         date: date,
       };
-    });
-
-    // Filter keywords based on date
-    let currentDate = moment();  // Get current date
-    formattedDataKw = formattedDataKw.filter(item => {
-      // Validate and parse date with the correct format
-      let keywordDate = moment(item.date, "MM/DD/YYYY h:mm:ss A", true);
-      return keywordDate.isValid() && (keywordDate.isBefore(currentDate) || keywordDate.isSame(currentDate, 'day'));
     });
 
     // Extract only the keywords into an array
@@ -371,6 +359,17 @@ const Post = async (req, res) => {
       console.log(`Query "${normalizedQuery}" not found in keywords. Redirecting to 404.`);
       return res.redirect(`${originUrl}/404.html`);
     }
+
+    // **Date Filtering Logic**: Ensure we handle date correctly
+    let currentDate = moment();  // Current date for comparison
+    formattedDataKw = formattedDataKw.filter(item => {
+      let keywordDate = moment(item.date, "MM/DD/YYYY hh:mm:ss A", true);  // Format with AM/PM
+      if (!keywordDate.isValid()) {
+        console.error(`Invalid date in entry: ${item.keyword}`);
+        return false;  // Skip invalid dates
+      }
+      return keywordDate.isBefore(currentDate) || keywordDate.isSame(currentDate, 'day');
+    });
 
     // Fetch related images and text based on the query
     let img = await getImages(query);
